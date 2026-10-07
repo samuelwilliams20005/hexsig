@@ -18,19 +18,25 @@ A file extension is only a label and can be changed in seconds. In digital foren
 Requires Python 3.
 
 ```
-python hexsig.py samples\cat.jpg
-python hexsig.py samples\cat.txt
+python hexsig.py samples\speed.jpg
+python hexsig.py samples\speed.txt
 ```
 
 ## Example output
 
-```
-PASTE THE OUTPUT FROM YOUR RENAMED cat.txt TEST HERE
-```
+First 32 bytes:
+00000000  FF D8 FF E0 00 10 4A 46 49 46 00 01 01 00 00 01  ......JFIF......
+00000010  00 01 00 00 FF DB 00 84 00 09 06 07 10 10 10 0F  ................
+
+Signature: FF D8 FF found, so the contents are a JPEG image
+End marker: FF D9 found at the end of the file
+WARNING: file is a JPEG but its extension is '.txt'
 
 ## What I learned
 
-- WRITE 2 OR 3 POINTS IN YOUR OWN WORDS, e.g. why the signature matters more than the extension, what the segments in a JPEG look like in the hex editor, and anything that went wrong while building it.
+- **The signature matters more than the extension.** I renamed a JPEG to `.txt` and the bytes in the hex editor were identical. Only the label changed. Windows treated it as a text file, but `hexsig` still identified it as a JPEG by reading `FF D8 FF` at the start. That showed me why forensic tools check file contents rather than trusting names.
+- **JPEGs are built from marked segments.** In HxD I could see `FF` bytes followed by marker codes near the start of the file, `JFIF` or `Exif` in the text column, and `FF D9` marking the end. After the header the data looks like random symbols because it's compressed.
+- **Setting it up involved real troubleshooting.** Python wasn't installed even though I had the VS Code extension (the extension doesn't include the interpreter), and my first push to GitHub failed with a 403 because Windows had saved a login for my other GitHub account. I fixed it by pointing the repo's remote URL at the correct username. I learned to read error messages carefully instead of guessing.
 
 ## Limitations and next steps
 

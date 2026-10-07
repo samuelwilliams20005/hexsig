@@ -42,3 +42,11 @@ WARNING: file is a JPEG but its extension is '.txt'
 
 - Currently JPEG only. Other formats could be added by extending the signature check.
 - Possible next step: scanning a file for embedded JPEGs and carving them out.
+
+   ## Running in a container
+
+   podman build -t hexsig .
+   podman run --rm --cgroups=disabled -v "${PWD}/samples:/data" hexsig /data/speed.jpg
+
+
+   The `--cgroups=disabled` flag was needed on my Windows/WSL setup. It may not be needed elsewhere.
